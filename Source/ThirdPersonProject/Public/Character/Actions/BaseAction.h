@@ -13,7 +13,7 @@ class ABaseCharacter;
 /**
  * 
  */
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, EditInlineNew)
 class THIRDPERSONPROJECT_API UBaseAction : public UObject
 {
 	GENERATED_BODY()

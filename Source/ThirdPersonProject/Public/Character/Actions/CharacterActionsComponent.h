@@ -53,8 +53,8 @@ protected:
 	void OnStopAction(UBaseAction* Action);
 
 protected:
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Actions)
-	TArray<TSubclassOf<UBaseAction>> CharacterActionClasses;
+    UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Instanced, Category = Actions)
+    TArray<UBaseAction*> Actions;
 
     UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Actions)
     float NextActionMemoryTime = 0.75f;

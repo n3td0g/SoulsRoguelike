@@ -158,32 +158,28 @@ void UCharacterActionsComponent::OnStopAction(UBaseAction* Action)
 
 void UCharacterActionsComponent::CreateActions()
 {
-	for (auto ActionClass : CharacterActionClasses)
+	for (auto Action : Actions)
 	{
-		if (ActionClass)
-		{
-			if (auto ActionDefaultObject = ActionClass->GetDefaultObject<UBaseAction>())
-			{
-				if (CharacterActions.Contains(ActionDefaultObject->GetActionType()))
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Action type <%s> is already exist."), *UBaseAction::GetActionTypeAsString(ActionDefaultObject->GetActionType()));
-					continue;
-				}
-
-				if (ActionDefaultObject->GetActionType() == EActionType::None)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Action type in None."));
-					continue;
-				}
-			}
-
-			auto NewAction = NewObject<UBaseAction>(this, ActionClass);
-			NewAction->SetOwner(GetOwner());
-			NewAction->Init();
-			CharacterActions.Add(NewAction->GetActionType(), NewAction);
-            if (!NewAction->GetTickOnlyIfActive())
+		if (Action)
+        {
+            if (CharacterActions.Contains(Action->GetActionType()))
             {
-                ActionsToTick.Push(NewAction);
+                UE_LOG(LogTemp, Warning, TEXT("Action type <%s> is already exist."), *UBaseAction::GetActionTypeAsString(Action->GetActionType()));
+                continue;
+            }
+
+            if (Action->GetActionType() == EActionType::None)
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Action type in None."));
+                continue;
+            }
+
+            Action->SetOwner(GetOwner());
+            Action->Init();
+            CharacterActions.Add(Action->GetActionType(), Action);
+            if (!Action->GetTickOnlyIfActive())
+            {
+                ActionsToTick.Push(Action);
             }
 		}
 	}
