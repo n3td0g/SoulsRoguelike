@@ -22,20 +22,21 @@ UCharacterStatsComponent::UCharacterStatsComponent()
 void UCharacterStatsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-    if (!bIsActive)
-    {
-        return;
-    }
+
+	if (!bIsActive)
+	{
+		return;
+	}
 
 	float WorldTime = GetWorld()->GetTimeSeconds();
-	for (int32 I = StatsToRecovery.Num() - 1; I >= 0 ; --I)
+	for (int32 I = StatsToRecovery.Num() - 1; I >= 0; --I)
 	{
 		if (FStatData* Data = StatsToRecovery[I])
 		{
 			if (Data->RecoveryStartTime < WorldTime)
 			{
-                ChangeStatDataValue(*Data, Data->RecoverySpeed * DeltaTime);
-			}			
+				ChangeStatDataValue(*Data, Data->RecoverySpeed * DeltaTime);
+			}
 		}
 		else
 		{

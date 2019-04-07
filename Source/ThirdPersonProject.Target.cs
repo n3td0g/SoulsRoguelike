@@ -7,7 +7,7 @@ public class ThirdPersonProjectTarget : TargetRules
 {
 	public ThirdPersonProjectTarget(TargetInfo Target) : base(Target)
 	{
-		Type = TargetType.Game;
+        Type = TargetType.Game;
 		ExtraModuleNames.Add("ThirdPersonProject");
 	}
 }
