@@ -38,6 +38,9 @@ public:
 
     UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Damage)
     float Damage = 20.0f;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Stamina)
+	float RequiredStamina = 10.0f;
 };
 
 UCLASS(BlueprintType, Blueprintable)
@@ -68,7 +71,7 @@ public:
     void ReceiveStopAttack();
 
     UFUNCTION(BlueprintCallable)
-    UAnimMontage* GetAttackMontage(EAttackType AttackType, int32& NumOfCombo);
+    UAnimMontage* GetAttackMontage(EAttackType AttackType, int32& NumOfCombo, float& RequiredStamina);
 
 protected:
     virtual void BeginPlay() override;

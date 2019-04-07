@@ -48,17 +48,19 @@ void ABaseWeapon::StopAttack()
     CurrentWeaponAnimation = nullptr;
 }
 
-UAnimMontage* ABaseWeapon::GetAttackMontage(EAttackType AttackType, int32& NumOfCombo)
+UAnimMontage* ABaseWeapon::GetAttackMontage(EAttackType AttackType, int32& NumOfCombo, float& RequiredStamina)
 {
     if (auto Result = WeaponAnimations.Find(AttackType))
     {
         if (Result->AttackAnimation)
         {
             NumOfCombo = Result->NumOfCombo;
+			RequiredStamina = Result->RequiredStamina;
             return Result->AttackAnimation;
         }
     }
-
+	NumOfCombo = 0;
+	RequiredStamina = 0.0f;
     return DefaultMontage;
 }
 

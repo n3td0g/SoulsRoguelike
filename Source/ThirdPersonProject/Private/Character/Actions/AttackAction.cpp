@@ -26,7 +26,7 @@ bool UAttackAction::ContinueAction()
     }
 
     int32 NumOfCombo = 1;
-    CurrentMontage = CurrentWeapon->GetAttackMontage(AttackType, NumOfCombo);
+    CurrentMontage = CurrentWeapon->GetAttackMontage(AttackType, NumOfCombo, RequiredStamina);
     if (NumOfCombo <= 1)
     {
         return false;
@@ -62,7 +62,7 @@ bool UAttackAction::Activate()
     {
         EAttackType AttackType = GetAttackType();
         int32 NumOfCombo = 1;
-        CurrentMontage = CurrentWeapon->GetAttackMontage(AttackType, NumOfCombo);
+        CurrentMontage = CurrentWeapon->GetAttackMontage(AttackType, NumOfCombo, RequiredStamina);
         CurrAttackType = AttackType;
         return Super::Activate();
     }
