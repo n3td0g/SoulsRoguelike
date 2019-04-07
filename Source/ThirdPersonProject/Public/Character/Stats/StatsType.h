@@ -44,4 +44,7 @@ struct FStatData
 
     UPROPERTY(Transient)
     float RecoveryStartTime;
+
+	UPROPERTY(Transient)
+	bool bRecoveryBlocked = false;
 };

@@ -153,7 +153,7 @@ void AThirdPersonProjectCharacter::RunButtonPressed()
                 return;
             }
         }
-        ActionComponent->StartAction(EActionType::Run);
+        ActionComponent->StartAction(EActionType::Run, false);
         LastRunInputTime = GetWorld()->TimeSeconds;
     }
 }

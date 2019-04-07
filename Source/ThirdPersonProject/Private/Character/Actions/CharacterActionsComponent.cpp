@@ -30,7 +30,7 @@ void UCharacterActionsComponent::TickComponent(float DeltaTime, ELevelTick TickT
     }
 }
 
-bool UCharacterActionsComponent::StartAction(EActionType NewActionType)
+bool UCharacterActionsComponent::StartAction(EActionType NewActionType, bool bSetAsNextAction /*= true*/)
 {
 	auto NewActionPtr = CharacterActions.Find(NewActionType);
 	if (!NewActionPtr)
@@ -50,8 +50,11 @@ bool UCharacterActionsComponent::StartAction(EActionType NewActionType)
 	{
 		if (!NewAction->HasHigherPriority(CurrentAction->GetActionType()))
 		{
-            NextAction = NewActionType;
-            NextActionActivationTime = GetWorld()->TimeSeconds;
+			if (bSetAsNextAction)
+			{
+				NextAction = NewActionType;
+  				NextActionActivationTime = GetWorld()->TimeSeconds;
+			}
 			return false;
 		}
 

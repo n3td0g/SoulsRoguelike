@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintPure)
 	float GetDataValue(EStatsType Type);
 
+	UFUNCTION(BlueprintCallable)
+	void SetRecoveryBlock(bool bBlockRecovery, EStatsType Type);
 public:
     UPROPERTY(BlueprintAssignable)
     FOnStatValueChanged OnValueChanged;

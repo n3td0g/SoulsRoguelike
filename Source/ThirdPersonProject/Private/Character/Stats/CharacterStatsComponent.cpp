@@ -33,7 +33,7 @@ void UCharacterStatsComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	{
 		if (FStatData* Data = StatsToRecovery[I])
 		{
-			if (Data->RecoveryStartTime < WorldTime)
+			if (Data->RecoveryStartTime < WorldTime && !Data->bRecoveryBlocked)
 			{
 				ChangeStatDataValue(*Data, Data->RecoverySpeed * DeltaTime);
 			}
@@ -126,6 +126,12 @@ float UCharacterStatsComponent::GetDataValue(EStatsType Type)
 {
 	FStatData& Data = GetStatData(Type);
 	return Data.Value;
+}
+
+void UCharacterStatsComponent::SetRecoveryBlock(bool bBlockRecovery, EStatsType Type)
+{
+	FStatData& Data = GetStatData(Type);
+	Data.bRecoveryBlocked = bBlockRecovery;
 }
 
 // Called when the game starts
