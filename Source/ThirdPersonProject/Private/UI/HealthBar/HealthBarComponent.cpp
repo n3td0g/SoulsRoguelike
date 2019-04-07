@@ -13,27 +13,6 @@ UHealthBarComponent::UHealthBarComponent()
     SetHiddenInGame(true);
 }
 
-void UHealthBarComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
-{
-    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-    if (!bHiddenInGame)
-    {
-        if (IsValid(LocalCharacter))
-        {
-            const FVector& CameraLocation = LocalCharacter->GetFollowCamera()->GetComponentLocation();
-            FVector DirectionToCamera = CameraLocation - GetComponentLocation();
-            float DistanceToCamera = DirectionToCamera.Size();
-            DirectionToCamera /= DistanceToCamera;
-
-            SetWorldRotation(DirectionToCamera.ToOrientationRotator());
-
-            float Scale = FMath::GetMappedRangeValueClamped(FVector2D(MinScaleDistance, MaxScaleDistance), FVector2D(MinScale, MaxScale), DistanceToCamera);
-            SetWorldScale3D(FVector(Scale));
-        }
-    }
-}
-
 void UHealthBarComponent::BeginPlay()
 {
     Super::BeginPlay();

@@ -18,8 +18,6 @@ class THIRDPERSONPROJECT_API UHealthBarComponent : public UWidgetComponent
 public:
     UHealthBarComponent();
 
-    virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
-
     virtual void BeginPlay() override;
 
 protected:
