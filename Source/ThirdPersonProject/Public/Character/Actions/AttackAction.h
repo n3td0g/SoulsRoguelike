@@ -18,6 +18,7 @@ class THIRDPERSONPROJECT_API UAttackAction : public UBaseMontageAction
 public:
     UAttackAction();
 	
+	virtual void Init() override;
     virtual bool ContinueAction() override;
     virtual bool Activate() override;
     virtual bool StopAction(bool bIsForce) override;
@@ -29,6 +30,9 @@ protected:
 protected:
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Combo)
     FString ComboNamePrefix = TEXT("Combo_");
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Trace)
+	TEnumAsByte<ETraceTypeQuery> ChannelToTrace;
 
     UPROPERTY(BlueprintReadOnly)
     class ABaseWeapon* CurrentWeapon;

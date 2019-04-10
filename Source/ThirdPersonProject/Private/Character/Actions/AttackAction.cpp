@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AttackAction.h"
+#include "Engine/EngineTypes.h"
+#include "Components/CapsuleComponent.h"
 #include "CharacterActionsComponent.h"
 #include "CharacterAnimInstance.h"
 #include "BaseCharacter.h"
@@ -10,6 +12,11 @@ UAttackAction::UAttackAction()
 {
     bUseAnimationEvents = true;
     Type = EActionType::Attack;
+}
+
+void UAttackAction::Init()
+{
+	Super::Init();
 }
 
 bool UAttackAction::ContinueAction()
@@ -58,6 +65,7 @@ bool UAttackAction::ContinueAction()
 bool UAttackAction::Activate()
 {
     CurrentWeapon = OwnerCharacter->GetCurrentWeapon();
+	CurrentWeapon->ChannelToTrace = ChannelToTrace;
     if (IsValid(CurrentWeapon))
     {
         EAttackType AttackType = GetAttackType();

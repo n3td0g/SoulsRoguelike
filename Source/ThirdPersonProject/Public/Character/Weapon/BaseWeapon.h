@@ -73,6 +73,10 @@ public:
     UFUNCTION(BlueprintCallable)
     UAnimMontage* GetAttackMontage(EAttackType AttackType, int32& NumOfCombo, float& RequiredStamina);
 
+public:
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<ETraceTypeQuery> ChannelToTrace;
+
 protected:
     virtual void BeginPlay() override;
 

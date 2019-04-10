@@ -37,9 +37,6 @@ protected:
     UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Trace)
     float TraceRadius = 5.0f;
 
-    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Trace)
-    TEnumAsByte<ETraceTypeQuery> ChannelToTrace;
-
     UPROPERTY(BlueprintReadOnly)
     TArray<USceneComponent*> ComponentsToTrace;
 private:
