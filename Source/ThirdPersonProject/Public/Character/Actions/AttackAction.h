@@ -32,6 +32,9 @@ protected:
     FString ComboNamePrefix = TEXT("Combo_");
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Trace)
+	TArray<TEnumAsByte<ETraceTypeQuery>> ChannelsToTrace;
+
+	UPROPERTY(BlueprintReadOnly)
 	TEnumAsByte<ETraceTypeQuery> ChannelToTrace;
 
     UPROPERTY(BlueprintReadOnly)

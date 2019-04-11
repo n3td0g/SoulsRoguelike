@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AttackAction.h"
+#include "TraceChannels.h"
 #include "Engine/EngineTypes.h"
 #include "Components/CapsuleComponent.h"
 #include "CharacterActionsComponent.h"
@@ -12,11 +13,31 @@ UAttackAction::UAttackAction()
 {
     bUseAnimationEvents = true;
     Type = EActionType::Attack;
+
+	ChannelsToTrace.Add(UEngineTypes::ConvertToTraceType(ECC_PlayerDamage));
+	ChannelsToTrace.Add(UEngineTypes::ConvertToTraceType(ECC_EnemyDamage));
 }
 
 void UAttackAction::Init()
 {
 	Super::Init();
+
+	//Finding trace channel for character (ignore self trace channel)
+	if (OwnerCharacter->GetMesh())
+	{
+		for (int32 I = ChannelsToTrace.Num() - 1; I >= 0; --I)
+		{
+			if (OwnerCharacter->GetMesh()->GetCollisionResponseToChannel(UEngineTypes::ConvertToCollisionChannel(ChannelsToTrace[I])) != ECR_Ignore)
+			{
+				ChannelsToTrace.RemoveAt(I);
+			}
+		}
+
+		if (ChannelsToTrace.Num())
+		{
+			ChannelToTrace = ChannelsToTrace[0];
+		}
+	}
 }
 
 bool UAttackAction::ContinueAction()
