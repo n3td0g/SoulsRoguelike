@@ -37,6 +37,15 @@ protected:
     UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Trace)
     float TraceRadius = 5.0f;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Audio)
+	USoundBase* SwingSound;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Audio)
+	USoundBase* HitSound;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Effects)
+	class UParticleSystem* HitEffect;
+
     UPROPERTY(BlueprintReadOnly)
     TArray<USceneComponent*> ComponentsToTrace;
 private:

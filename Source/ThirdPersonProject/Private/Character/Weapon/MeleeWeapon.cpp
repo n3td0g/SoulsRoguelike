@@ -2,7 +2,9 @@
 
 #include "MeleeWeapon.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 void AMeleeWeapon::StartAttack(EAttackType AttackType)
 {
@@ -18,6 +20,8 @@ void AMeleeWeapon::StartAttack(EAttackType AttackType)
 
     UpdatePrevTracePoints();
     GetWorld()->GetTimerManager().SetTimer(TraceTimer, this, &AMeleeWeapon::Trace, TraceUpdateTime, true, TraceUpdateTime);
+
+	UGameplayStatics::PlaySoundAtLocation(this, SwingSound, GetActorLocation());
 }
 
 void AMeleeWeapon::StopAttack()
@@ -50,11 +54,15 @@ void AMeleeWeapon::Trace()
 
     FHitResult HitResult;
     int32 Index = 0;   
+	bool bAnyHit = false;
+	FVector LastHitLocation(FVector::ZeroVector);
+	FVector LastHitDirecton(FVector::ZeroVector);
 
     for (auto ComponentToTrace : ComponentsToTrace)
     {
         EDrawDebugTrace::Type DebugTrace = bDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None;
-        if(UKismetSystemLibrary::SphereTraceSingle(this, ComponentToTrace->GetComponentLocation(), PrevTracePoint[Index++], TraceRadius, 
+		const FVector& PrevTraceLocation = PrevTracePoint[Index++];
+        if(UKismetSystemLibrary::SphereTraceSingle(this, ComponentToTrace->GetComponentLocation(), PrevTraceLocation, TraceRadius,
             ChannelToTrace, false, ActorsToIgnore, DebugTrace, HitResult, false, FLinearColor::Red))
         {
             if (bDebug)
@@ -72,9 +80,21 @@ void AMeleeWeapon::Trace()
                 }
                 HitResult.GetActor()->TakeDamage(CurrentWeaponAnimation->Damage, DamageEvent, OwnerController, this);
                 ActorsToIgnore.Add(HitResult.GetActor());
+				bAnyHit = true;
+				LastHitLocation = HitResult.Location;
+				LastHitDirecton = ComponentToTrace->GetComponentLocation() - PrevTraceLocation;
+				
             }
         }
     }
+
+	if (bAnyHit)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, LastHitLocation);
+		LastHitDirecton.Normalize();
+		const FRotator& EffectRotation = UKismetMathLibrary::MakeRotFromX(LastHitDirecton);
+		UGameplayStatics::SpawnEmitterAtLocation(this, HitEffect, LastHitLocation, EffectRotation);
+	}
 
     UpdatePrevTracePoints();
 }
