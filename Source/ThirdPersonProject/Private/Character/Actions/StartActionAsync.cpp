@@ -34,6 +34,10 @@ void UStartActionAsync::Activate()
         ActionComponent->OnActionStopped.AddUniqueDynamic(this, &UStartActionAsync::OnActionStopped);
         ActionComponent->OnBeforeStopAction.AddUniqueDynamic(this, &UStartActionAsync::OnBeforeStopAction);
     }
+	else
+	{
+		OnFailed.Broadcast();
+	}
 }
 
 void UStartActionAsync::OnBeforeStopAction(UBaseAction* Action)

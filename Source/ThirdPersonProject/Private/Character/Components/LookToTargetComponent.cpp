@@ -138,6 +138,16 @@ void ULookToTargetComponent::SelectNextTarget(float Sign, float MaxCos /*= 0.5f*
 	}
 }
 
+void ULookToTargetComponent::SetActive(bool bNewActive, bool bReset /*= false*/)
+{
+	Super::SetActive(bNewActive, bReset);
+
+	if (!bNewActive)
+	{
+		SetTarget(nullptr);
+	}
+}
+
 // Called when the game starts
 void ULookToTargetComponent::BeginPlay()
 {

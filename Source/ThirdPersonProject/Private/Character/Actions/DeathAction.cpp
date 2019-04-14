@@ -1,10 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "DeathAction.h"
+#include "Classes/AIController.h"
+#include "Classes/BrainComponent.h"
 #include "BaseCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "CharacterActionsComponent.h"
 #include "CharacterStatsComponent.h"
+#include "LookToTargetComponent.h"
 #include "TargetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -32,7 +35,15 @@ bool UDeathAction::Activate()
 				Target->Deactivate();
 			}
 		}
-		
+		if (ULookToTargetComponent* LookToTarget = OwnerCharacter->FindComponentByClass<ULookToTargetComponent>())
+		{
+			LookToTarget->Deactivate();
+		}
+
+		if (AAIController* AIController = Cast<AAIController>(OwnerCharacter->GetController()))
+		{
+			AIController->GetBrainComponent()->StopLogic(TEXT("Character is dead"));
+		}
     }
     return true;
 }

@@ -32,6 +32,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SelectNextTarget(float Sign, float MaxCos = 0.5f, float MaxDistance = 1200.0f);
 
+	virtual void SetActive(bool bNewActive, bool bReset) override;
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FTargetChangedDelegate OnTargetChanged;
