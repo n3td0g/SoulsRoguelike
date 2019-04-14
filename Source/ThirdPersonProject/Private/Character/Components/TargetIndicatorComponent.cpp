@@ -24,13 +24,6 @@ void UTargetIndicatorComponent::TickComponent(float DeltaTime, enum ELevelTick T
 			const FVector& CameraLocation = Camera->GetComponentLocation();
 
 			SetWorldLocation(TargetLocation);
-			
-			const FRotator& TargetRotation = UKismetMathLibrary::FindLookAtRotation(TargetLocation, CameraLocation);
-			SetWorldRotation(TargetRotation);
-
-			float DistanceToTarget = FVector::Dist(CameraLocation, TargetLocation);
-			float Scale = FMath::GetMappedRangeValueClamped(DistanceDiapason, ScaleDiapason, DistanceToTarget);
-			SetWorldScale3D(FVector(Scale));
 		}
 	}
 }
@@ -57,20 +50,17 @@ void UTargetIndicatorComponent::TargetChanged(class UTargetComponent* NewTarget)
 	if (IsValid(NewTarget))
 	{
 		bAbsoluteLocation = true;
-		bAbsoluteRotation = true;
 		SetComponentTickEnabled(true);
 		SetHiddenInGame(false, true);
 	}
 	else
 	{
 		bAbsoluteLocation = false;
-		bAbsoluteRotation = false;
 		
 		SetComponentTickEnabled(false);
 		SetHiddenInGame(true, true);
 
 		SetRelativeLocation(FVector::ZeroVector);
-		SetRelativeRotation(FRotator::ZeroRotator);
 	}
 
 	Target = NewTarget;

@@ -25,11 +25,6 @@ protected:
 	void TargetChanged(class UTargetComponent* NewTarget);
 
 protected:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Scale)
-	FVector2D DistanceDiapason = FVector2D(50.0f, 1000.0f);
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Scale)
-	FVector2D ScaleDiapason = FVector2D(0.1f, 1.0f);
 
 	UPROPERTY(BlueprintReadOnly)
 	class UTargetComponent* Target;
