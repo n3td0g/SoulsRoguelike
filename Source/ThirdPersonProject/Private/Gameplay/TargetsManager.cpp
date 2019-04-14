@@ -27,13 +27,18 @@ UTargetComponent* ATargetsManager::GetNearestTarget(const FVector& Location, con
 			continue;
 		}
 
+		if (!Target->IsActive())
+		{
+			continue;
+		}
+
 		if (Target == CurrentTarget)
 		{
 			continue;
 		}
 
 		const FVector& TargetLocation = Target->GetComponentLocation();
-		FVector&& VectorToTarget = TargetLocation - Location;
+		FVector VectorToTarget = TargetLocation - Location;
 		float DistanceToTargetSquared = VectorToTarget.SizeSquared();
 		if (DistanceToTargetSquared > MaxDistanceSquared)
 		{

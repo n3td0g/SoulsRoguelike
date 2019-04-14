@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "LookToTargetComponent.h"
+#include "BaseCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -23,13 +24,23 @@ void ULookToTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if(!OwnerPawn || !OwnerPawn->GetController())
+	if(!OwnerCharacter || !OwnerCharacter->GetController())
 	{
 		return;
 	}
 
 	if (IsValid(TargetComponent))
 	{
+		if (!TargetComponent->IsActive())
+		{
+			SetTarget(nullptr);
+			SelectNearestTarget();
+			if (!IsValid(TargetComponent))
+			{
+				return;
+			}
+		}
+
 		FVector ComponentLocation = GetComponentLocation();
 		const FVector& TargetLocation = TargetComponent->GetComponentLocation();
 		float DistanceToTarget = (ComponentLocation - TargetLocation).Size();
@@ -41,7 +52,7 @@ void ULookToTargetComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		ComponentLocation.Z += Offset;
 		const FRotator& TargetRotation = UKismetMathLibrary::FindLookAtRotation(ComponentLocation, TargetLocation);
 		
-		OwnerPawn->GetController()->SetControlRotation(TargetRotation);
+		OwnerCharacter->GetController()->SetControlRotation(TargetRotation);
 
 		if (IsValid(IndicatorComponent))
 		{
@@ -63,7 +74,7 @@ void ULookToTargetComponent::SetTarget(UTargetComponent* NewTarget)
 	TargetComponent = NewTarget;
 	bool bTargetIsValid = IsValid(TargetComponent);
 	SetComponentTickEnabled(bTargetIsValid);
-	if (auto MovementComponent = GetOwnerMovementComponent())
+	if (auto MovementComponent = OwnerCharacter->GetCharacterMovement())
 	{
 		MovementComponent->bOrientRotationToMovement = !bTargetIsValid;
 	}
@@ -87,23 +98,23 @@ void ULookToTargetComponent::SetTarget(UTargetComponent* NewTarget)
 
 void ULookToTargetComponent::SelectNearestTarget(float MaxCos, float MaxDistance)
 {
-	if (!IsValid(OwnerPawn))
+	if (!IsValid(OwnerCharacter))
 	{
 		return;
 	}
 
-	if (auto Camera = OwnerPawn->FindComponentByClass<UCameraComponent>())
+	if (auto Camera = OwnerCharacter->FindComponentByClass<UCameraComponent>())
 	{
 		if (auto TargetsManager = UTPGameplayStatics::GetTargetsManager(this))
 		{
-			SetTarget(TargetsManager->GetNearestTarget(Camera->GetComponentLocation(), FVector::ZeroVector, Camera->GetForwardVector(), ProbeChannel, nullptr, MaxCos, MaxDistance));
+			SetTarget(TargetsManager->GetNearestTarget(OwnerCharacter->GetActorLocation(), FVector::ZeroVector, Camera->GetForwardVector(), ProbeChannel, nullptr, MaxCos, MaxDistance));
 		}
 	}
 }
 
 void ULookToTargetComponent::SelectNextTarget(float Sign, float MaxCos /*= 0.5f*/, float MaxDistance /*= 1500.0f*/)
 {
-	if (!IsValid(OwnerPawn))
+	if (!IsValid(OwnerCharacter))
 	{
 		return;
 	}
@@ -113,11 +124,11 @@ void ULookToTargetComponent::SelectNextTarget(float Sign, float MaxCos /*= 0.5f*
 		return;
 	}
 
-	if (auto Camera = OwnerPawn->FindComponentByClass<UCameraComponent>())
+	if (auto Camera = OwnerCharacter->FindComponentByClass<UCameraComponent>())
 	{
 		if (auto TargetsManager = UTPGameplayStatics::GetTargetsManager(this))
 		{
-			auto NextTarget = TargetsManager->GetNearestTarget(Camera->GetComponentLocation(), Camera->GetRightVector() * Sign, 
+			auto NextTarget = TargetsManager->GetNearestTarget(OwnerCharacter->GetActorLocation(), Camera->GetRightVector() * Sign,
 				Camera->GetForwardVector(), ProbeChannel, TargetComponent, MaxCos, MaxDistance);
 			if (IsValid(NextTarget))
 			{
@@ -132,19 +143,19 @@ void ULookToTargetComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OwnerPawn = Cast<APawn>(GetOwner());
-}
-
-UCharacterMovementComponent* ULookToTargetComponent::GetOwnerMovementComponent()
-{
-	return GetOwner()->FindComponentByClass<UCharacterMovementComponent>();
+	OwnerCharacter = Cast<ABaseCharacter>(GetOwner());
 }
 
 void ULookToTargetComponent::CheckTarget()
 {
+	if (!IsValid(OwnerCharacter))
+	{
+		return;
+	}
+
 	if (IsValid(TargetComponent))
 	{
-		if (auto Camera = OwnerPawn->FindComponentByClass<UCameraComponent>())
+		if (auto Camera = OwnerCharacter->FindComponentByClass<UCameraComponent>())
 		{
 			FCollisionQueryParams Params;
 			Params.AddIgnoredActor(GetOwner());

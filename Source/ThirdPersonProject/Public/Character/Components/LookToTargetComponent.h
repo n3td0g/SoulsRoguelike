@@ -9,6 +9,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTargetChangedDelegate, UTargetComponent*, NewTarget);
 
+class ABaseCharacter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class THIRDPERSONPROJECT_API ULookToTargetComponent : public USceneComponent
@@ -39,8 +40,6 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	class UCharacterMovementComponent* GetOwnerMovementComponent();
-
 protected:
 	//Offset
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Offset")
@@ -53,7 +52,7 @@ protected:
 	UTargetComponent* TargetComponent;
 	
 	UPROPERTY(BlueprintReadOnly)
-	APawn* OwnerPawn;
+	ABaseCharacter* OwnerCharacter;
 
 	//Indicator
 	UPROPERTY(BlueprintReadWrite)

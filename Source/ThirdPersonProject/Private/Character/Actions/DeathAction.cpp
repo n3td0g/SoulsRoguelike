@@ -5,6 +5,7 @@
 #include "Components/CapsuleComponent.h"
 #include "CharacterActionsComponent.h"
 #include "CharacterStatsComponent.h"
+#include "TargetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 UDeathAction::UDeathAction()
@@ -23,6 +24,15 @@ bool UDeathAction::Activate()
     {
         OwnerCharacter->GetCharacterMovement()->Deactivate();
         OwnerCharacter->GetStatsComponent()->Deactivate();
+		TArray<UActorComponent*> TargetComponents = OwnerCharacter->GetComponentsByClass(UTargetComponent::StaticClass());
+		for (UActorComponent* Component : TargetComponents)
+		{
+			if (UTargetComponent *Target = Cast<UTargetComponent>(Component))
+			{
+				Target->Deactivate();
+			}
+		}
+		
     }
     return true;
 }
