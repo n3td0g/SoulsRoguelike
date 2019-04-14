@@ -41,6 +41,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Stamina)
 	float RequiredStamina = 10.0f;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Rotation)
+	float YawRotationRate = 0.0f;
 };
 
 UCLASS(BlueprintType, Blueprintable)
@@ -71,7 +74,7 @@ public:
     void ReceiveStopAttack();
 
     UFUNCTION(BlueprintCallable)
-    UAnimMontage* GetAttackMontage(EAttackType AttackType, int32& NumOfCombo, float& RequiredStamina);
+    UAnimMontage* GetAttackMontage(EAttackType AttackType, int32& NumOfCombo, float& RequiredStamina, float& OutRotationRate);
 
 public:
 	UPROPERTY(BlueprintReadOnly)

@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "CharacterActionsComponent.h"
 #include "CharacterAnimInstance.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "BaseCharacter.h"
 #include "RunAction.h"
 
@@ -38,6 +39,8 @@ void UAttackAction::Init()
 			ChannelToTrace = ChannelsToTrace[0];
 		}
 	}
+
+	DefaultRotationRate = OwnerCharacter->GetCharacterMovement()->RotationRate.Yaw;
 }
 
 bool UAttackAction::ContinueAction()
@@ -54,7 +57,8 @@ bool UAttackAction::ContinueAction()
     }
 
     int32 NumOfCombo = 1;
-    CurrentMontage = CurrentWeapon->GetAttackMontage(AttackType, NumOfCombo, RequiredStamina);
+	float YawRotationRate = 0.0f;
+    CurrentMontage = CurrentWeapon->GetAttackMontage(AttackType, NumOfCombo, RequiredStamina, YawRotationRate);
     if (NumOfCombo <= 1)
     {
         return false;
@@ -85,23 +89,31 @@ bool UAttackAction::ContinueAction()
 
 bool UAttackAction::Activate()
 {
-    CurrentWeapon = OwnerCharacter->GetCurrentWeapon();
-	CurrentWeapon->ChannelToTrace = ChannelToTrace;
+    CurrentWeapon = OwnerCharacter->GetCurrentWeapon();	
     if (IsValid(CurrentWeapon))
-    {
-        EAttackType AttackType = GetAttackType();
-        int32 NumOfCombo = 1;
-        CurrentMontage = CurrentWeapon->GetAttackMontage(AttackType, NumOfCombo, RequiredStamina);
-        CurrAttackType = AttackType;
-        return Super::Activate();
-    }
-    return false;
+	{
+		EAttackType AttackType = GetAttackType();
+		int32 NumOfCombo = 1;
+		float YawRotationRate = 0.0f;
+		CurrentMontage = CurrentWeapon->GetAttackMontage(AttackType, NumOfCombo, RequiredStamina, YawRotationRate);
+		if (Super::Activate())
+		{
+			CurrentWeapon->ChannelToTrace = ChannelToTrace;
+			CurrAttackType = AttackType;
+			OwnerCharacter->GetCharacterMovement()->RotationRate.Yaw = YawRotationRate;
+
+			return true;
+		}
+	}
+	return false;
 }
 
 bool UAttackAction::StopAction(bool bIsForce)
 {
     if (Super::StopAction(bIsForce))
     {
+		OwnerCharacter->GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
+		OwnerCharacter->GetCharacterMovement()->RotationRate.Yaw = DefaultRotationRate;
         SectionName = NAME_None;        
         ComboIndex = 0;
         return true;
@@ -109,11 +121,19 @@ bool UAttackAction::StopAction(bool bIsForce)
     return false;
 }
 
+void UAttackAction::ActionTick(float DeltaTime)
+{
+	Super::ActionTick(DeltaTime);
+
+	OwnerCharacter->MoveForward(1.0f);
+}
+
 void UAttackAction::StartAnimationEvent()
 {
     Super::StartAnimationEvent();
 
     CurrentWeapon->StartAttack(CurrAttackType);
+	OwnerCharacter->GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = true;
 }
 
 void UAttackAction::StopAnimationEvent()
@@ -121,6 +141,7 @@ void UAttackAction::StopAnimationEvent()
     Super::StopAnimationEvent();
 
     CurrentWeapon->StopAttack();
+	OwnerCharacter->GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
 }
 
 EAttackType UAttackAction::GetAttackType() const

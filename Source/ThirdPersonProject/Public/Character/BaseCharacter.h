@@ -65,6 +65,10 @@ public:
     EActionType GetNextActionType();
     //----------------------------------
 
+	//Movement
+	void MoveForward(float Value);
+	void MoveRight(float Value);
+
 protected:
 	virtual void BeginPlay() override;
 

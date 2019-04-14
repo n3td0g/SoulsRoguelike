@@ -23,6 +23,8 @@ public:
     virtual bool Activate() override;
     virtual bool StopAction(bool bIsForce) override;
 
+	virtual void ActionTick(float DeltaTime) override;
+
 protected:
     virtual void StartAnimationEvent() override;
     virtual void StopAnimationEvent() override;
@@ -47,4 +49,6 @@ private:
     //Combo
     int32 ComboIndex = 0;
     EAttackType CurrAttackType = EAttackType::None;
+
+	float DefaultRotationRate = 0.0f;
 };
