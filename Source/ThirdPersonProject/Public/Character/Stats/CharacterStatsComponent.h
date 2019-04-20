@@ -35,7 +35,7 @@ public:
 	FStatData& GetStatData(EStatsType Type);
 
 	UFUNCTION(BlueprintPure)
-	float GetDataValue(EStatsType Type);
+	float GetDataValue(EStatsType Type) const;
 
 	UFUNCTION(BlueprintCallable)
 	void SetRecoveryBlock(bool bBlockRecovery, EStatsType Type);

@@ -117,15 +117,14 @@ FStatData& UCharacterStatsComponent::GetStatData(EStatsType Type)
 {
 	int32 Index = (int32)Type;
 
-	check(Stats.IsValidIndex(Index));
-
 	return Stats[Index];
 }
 
-float UCharacterStatsComponent::GetDataValue(EStatsType Type)
+float UCharacterStatsComponent::GetDataValue(EStatsType Type) const
 {
-	FStatData& Data = GetStatData(Type);
-	return Data.Value;
+	int32 Index = (int32)Type;
+
+	return Stats[Index].Value;
 }
 
 void UCharacterStatsComponent::SetRecoveryBlock(bool bBlockRecovery, EStatsType Type)

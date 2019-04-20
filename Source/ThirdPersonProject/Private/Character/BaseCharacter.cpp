@@ -21,6 +21,7 @@ float ABaseCharacter::TakeDamage(float Damage, struct FDamageEvent const& Damage
     if (StatsComponent->ChangeStatValue(EStatsType::Health, -ActualDamage) <= 0.0f)
     {
         ActionComponent->StartAction(EActionType::Death);
+		OnDeath();
     }
     return ActualDamage;
 }
@@ -63,9 +64,19 @@ FStatData& ABaseCharacter::GetStatData(EStatsType Type)
     return StatsComponent->GetStatData(Type);
 }
 
-float ABaseCharacter::GetDataValue(EStatsType Type)
+float ABaseCharacter::GetDataValue(EStatsType Type) const
 {
     return StatsComponent->GetDataValue(Type);
+}
+
+bool ABaseCharacter::IsDead() const
+{
+	return GetDataValue(EStatsType::Health) <= 0.0f;
+}
+
+void ABaseCharacter::OnDeath_Implementation()
+{
+
 }
 
 //------------------------------------

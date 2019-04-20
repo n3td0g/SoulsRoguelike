@@ -42,8 +42,14 @@ public:
     FStatData& GetStatData(EStatsType Type);
 
     UFUNCTION(BlueprintPure)
-    float GetDataValue(EStatsType Type);
+    float GetDataValue(EStatsType Type) const;
+
+	UFUNCTION(BlueprintPure)
+	bool IsDead() const;
     //----------------------------------
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnDeath();
 
     //Actions
     UFUNCTION(BlueprintCallable)
