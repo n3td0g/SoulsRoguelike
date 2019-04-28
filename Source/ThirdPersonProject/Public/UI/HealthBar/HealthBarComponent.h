@@ -31,18 +31,6 @@ protected:
     UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Visibility)
     float HideComponentDelay = 7.0f;
 
-    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Scale)
-    float MinScale = 1.0f;
-
-    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Scale)
-    float MaxScale = 10.0f;
-
-    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Scale)
-    float MinScaleDistance = 100.0f;
-
-    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Scale)
-    float MaxScaleDistance = 5000.0f;
-
 private:
     FTimerHandle HideWidgetTimer;
 	
